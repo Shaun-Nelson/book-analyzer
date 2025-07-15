@@ -1,22 +1,15 @@
-interface ArchiveSearchResult {
-  response: {
-    docs: {
-      identifier: string;
-    }[];
-    numFound: number;
-  };
-}
+import { ArchiveItem, ArchiveSearchOptions } from "@/lib/types";
 
-const searchArchiveOrg = async (
-  query: string,
-  rows: number = 10,
-  page: number = 1
-): Promise<string[]> => {
+const searchArchiveOrg = async ({
+  query,
+  rows = 10,
+  page = 1,
+}: ArchiveSearchOptions): Promise<ArchiveItem[]> => {
   const baseUrl =
     process.env.ARCHIVE_ORG_SEARCH_ENDPOINT ||
     "https://archive.org/advancedsearch.php";
 
-  const fullQuery = `${query} AND mediatype:(texts)`;
+  const fullQuery = `${encodeURIComponent(query)} AND mediatype:(texts)`;
 
   const searchParams = new URLSearchParams({
     q: fullQuery,
@@ -33,8 +26,9 @@ const searchArchiveOrg = async (
     throw new Error(`Search failed: ${response.statusText}`);
   }
 
-  const data: ArchiveSearchResult = await response.json();
-  return data.response.docs.map((doc) => doc.identifier);
+  const data = await response.json();
+  console.log("Search results:", data);
+  return data.response.docs as ArchiveItem[];
 };
 
 export default searchArchiveOrg;
