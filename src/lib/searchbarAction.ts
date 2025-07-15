@@ -10,17 +10,16 @@ export async function searchArchiveOrgAction(formData: FormData) {
   });
 
   if (!parsedData.success) {
-    return { error: parsedData.error.issues[0].message };
+    throw new Error(parsedData.error.issues[0].message);
   }
 
-  const { query } = parsedData.data;
-
   try {
-    const results = await searchArchiveOrg(query);
+    const results = await searchArchiveOrg({ query: parsedData.data.query });
     revalidatePath("/");
 
-    return { results };
+    return results;
   } catch (error) {
-    return { error: "Failed to fetch results. Please try again." };
+    console.error("Error searching Archive.org:", error);
+    throw new Error("Failed to fetch search results");
   }
 }
