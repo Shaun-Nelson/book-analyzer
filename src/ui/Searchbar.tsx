@@ -6,8 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { searchArchiveOrgSchema } from "@/lib/schemas";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { ArchiveItem } from "@/lib/types";
 
-export default function Searchbar() {
+type Props = {
+  onSearchResults: (results: ArchiveItem[]) => void;
+};
+
+export default function Searchbar({ onSearchResults }: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -22,20 +27,34 @@ export default function Searchbar() {
   });
 
   const handleSearch = () => {
-    const params = new URLSearchParams(searchParams);
-    params.set("query", getValues("query"));
-    replace(`${pathname}?${params.toString()}`);
+    const params = new URLSearchParams(searchParams.toString());
+    const query = getValues("query")?.trim();
+
+    if (query) {
+      params.set("query", query);
+    } else {
+      params.delete("query");
+    }
+
+    const queryString = params.toString();
+    const url = queryString ? `${pathname}?${queryString}` : pathname;
+
+    replace(url);
   };
 
-  const onSubmit = async (data: { query: string }) => {
+  const onSubmit = async (data: { query?: string }) => {
     try {
       const formData = new FormData();
-      formData.append("query", data.query);
-      const res = await searchArchiveOrgAction(formData);
-      console.log("Search results:", res);
+      formData.append("query", data.query ?? "");
+      const results = await searchArchiveOrgAction(formData);
+      console.log("Search results:", results);
+
+      onSearchResults(results);
       handleSearch();
     } catch (error) {
       console.error("Search error:", error);
+      onSearchResults([]);
+      handleSearch();
     }
   };
 
@@ -51,9 +70,9 @@ export default function Searchbar() {
           type='text'
           placeholder={errors.query ? errors.query.message : "Search"}
           {...register("query", {
-            required: "Please enter a book title or author",
+            required: "Search book title or author",
           })}
-          className='font-[ibmPlexSans] pl-12 text-2xl text-neutral-800 w-full max-w-md p-2 bg-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+          className='font-[ibmPlexSans] pl-12 text-2xl text-neutral-800 w-full max-w-md p-2 bg-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:bg-neutral-100 transition-colors duration-300'
         />
       </div>
     </form>

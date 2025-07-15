@@ -14,10 +14,15 @@ export async function searchArchiveOrgAction(formData: FormData) {
   }
 
   try {
-    const results = await searchArchiveOrg({ query: parsedData.data.query });
-    revalidatePath("/");
+    if (parsedData.data.query) {
+      const results = await searchArchiveOrg({ query: parsedData.data.query });
+      revalidatePath("/");
 
-    return results;
+      return results;
+    } else {
+      revalidatePath("/");
+      return [];
+    }
   } catch (error) {
     console.error("Error searching Archive.org:", error);
     throw new Error("Failed to fetch search results");

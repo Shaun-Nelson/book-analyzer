@@ -11,7 +11,7 @@ const searchArchiveOrg = async ({
 
   const searchParams = new URLSearchParams({
     q: fullQuery,
-    fl: "identifier",
+    fl: "identifier,title,creator,date",
     rows: rows.toString(),
     start: start.toString(),
     output: "json",

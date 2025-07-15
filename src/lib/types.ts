@@ -3,6 +3,10 @@ export interface ArchiveSearchResult {
   response: {
     docs: {
       identifier: string;
+      title?: string;
+      creator?: string;
+      date?: string;
+      mediatype?: string;
     }[];
     numFound: number;
   };
@@ -16,8 +20,8 @@ export type ArchiveSearchOptions = {
 
 export type ArchiveItem = {
   identifier: string;
-  title: string;
+  title?: string;
   creator?: string;
   date?: string;
-  mediatype: string;
+  mediatype?: string;
 };
