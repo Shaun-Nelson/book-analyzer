@@ -20,8 +20,8 @@ export type ArchiveSearchOptions = {
 
 export type ArchiveItem = {
   identifier: string;
-  title?: string;
-  creator?: string;
+  title: string;
+  creator: string;
   date?: string;
   mediatype?: string;
 };

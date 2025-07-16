@@ -5,7 +5,7 @@ type Props = {
   item: ArchiveItem;
   error: boolean;
   setText: (text: string | null) => void;
-  setBookChoice: (bookChoice: string) => void;
+  setBookChoice: (bookChoice: ArchiveItem) => void;
   setErrorForItem: (identifier: string, error: boolean) => void;
 };
 
@@ -22,7 +22,7 @@ export default function SearchResultCard({
       if (result !== null) {
         setErrorForItem(item.identifier, false);
         setText(result);
-        setBookChoice(item.identifier);
+        setBookChoice(item);
       } else {
         setErrorForItem(item.identifier, true);
       }

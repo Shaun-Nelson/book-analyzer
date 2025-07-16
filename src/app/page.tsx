@@ -2,7 +2,6 @@
 
 import PageTitleAndDescription from "@/ui/PageTitleAndDescription";
 import SearchResults from "@/ui/SearchResults";
-import BookReader from "@/ui/BookReader";
 import { ArchiveItem } from "@/lib/types";
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";

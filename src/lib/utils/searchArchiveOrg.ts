@@ -1,4 +1,5 @@
 import { ArchiveItem, ArchiveSearchOptions } from "@/lib/types";
+import { revalidatePath } from "next/cache";
 
 export const searchArchiveOrg = async ({
   query,
@@ -66,9 +67,13 @@ export const fetchFullTextFromArchiveOrg = async (
     }
 
     const fullText = await textRes.text();
+
+    revalidatePath("/");
+
     return fullText;
   } catch (error) {
     console.error("Error fetching full text:", error);
+    revalidatePath("/");
     throw error;
   }
 };
