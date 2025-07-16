@@ -1,7 +1,7 @@
 "use server";
 
-import { searchArchiveOrgSchema } from "./schemas";
-import searchArchiveOrg from "@/lib/utils/searchArchiveOrg";
+import { searchArchiveOrgSchema } from "../schemas";
+import { searchArchiveOrg } from "@/lib/utils/searchArchiveOrg";
 import { revalidatePath } from "next/cache";
 
 export async function searchArchiveOrgAction(formData: FormData) {

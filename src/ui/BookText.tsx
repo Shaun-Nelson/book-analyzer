@@ -1,12 +1,18 @@
+"use client";
+
 import SearchResultCard from "./SearchResultCard";
 import { ArchiveItem } from "@/lib/types";
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   searchResults: ArchiveItem[];
 };
 
 export default function BookText({ searchResults }: Props) {
-  return searchResults.length === 0 ? (
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
+
+  return !query ? (
     <div className='hidden'></div>
   ) : (
     <div className='mt-8'>
