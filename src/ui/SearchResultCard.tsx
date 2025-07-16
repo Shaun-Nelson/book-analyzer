@@ -1,41 +1,58 @@
-"use client";
-
 import { ArchiveItem } from "@/lib/types";
 import { fetchFullText } from "@/lib/actions/fetchFullTextAction";
-import Link from "next/link";
-import { useState } from "react";
 
 type Props = {
   item: ArchiveItem;
+  error: boolean;
+  setText: (text: string | null) => void;
+  setBookChoice: (bookChoice: string) => void;
+  setErrorForItem: (identifier: string, error: boolean) => void;
 };
 
-export default function SearchResultCard({ item }: Props) {
-  const [text, setText] = useState<string | null>(null);
-
+export default function SearchResultCard({
+  item,
+  error,
+  setText,
+  setBookChoice,
+  setErrorForItem,
+}: Props) {
   const handleFetchFullText = async () => {
     try {
       const result = await fetchFullText(item.identifier);
-      setText(result);
+      if (result !== null) {
+        setErrorForItem(item.identifier, false);
+        setText(result);
+        setBookChoice(item.identifier);
+      } else {
+        setErrorForItem(item.identifier, true);
+      }
     } catch (error) {
+      setErrorForItem(item.identifier, true);
       console.error(error);
     }
   };
 
   return (
     <li key={item.identifier} className='p-4 bg-neutral-100 shadow rounded'>
-      <h3 className='font-bold'>{item.title}</h3>
-      <p className='text-sm text-neutral-600'>
-        {item.creator || "Unknown author"} —{" "}
-        {item.date?.split("-")[0] || "undated"}
-      </p>
-      <Link href={"/read"}>
-        <button
-          className='py-2 px-4 mt-4 text-lg text-neutral-50 rounded-xl bg-neutral-600'
-          onClick={handleFetchFullText}
-        >
-          Read and Analyze
-        </button>
-      </Link>
+      {!error ? (
+        <>
+          <h3 className='font-bold'>{item.title}</h3>
+          <p className='text-sm text-neutral-600'>
+            {item.creator || "Unknown author"} —{" "}
+            {item.date?.split("-")[0] || "undated"}
+          </p>
+          <button
+            className='py-2 px-4 mt-4 text-lg text-neutral-50 rounded-xl bg-neutral-600'
+            onClick={handleFetchFullText}
+          >
+            Read and Analyze
+          </button>
+        </>
+      ) : (
+        <p className='text-lg text-neutral-800'>
+          Full text is unavailable for your selection
+        </p>
+      )}
     </li>
   );
 }

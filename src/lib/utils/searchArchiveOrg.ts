@@ -19,7 +19,11 @@ export const searchArchiveOrg = async ({
 
   const url = `${baseUrl}?${searchParams.toString()}`;
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (compatible; ArchiveOrgReader/1.0)",
+    },
+  });
   if (!response.ok) {
     throw new Error(`Search failed: ${response.statusText}`);
   }
@@ -44,7 +48,10 @@ export const fetchFullTextFromArchiveOrg = async (
 
     // Step 2: Find the text file (usually ends with _djvu.txt)
     const files = metadata.files as { name: string }[];
-    const textFile = files.find((file) => file.name.endsWith("_djvu.txt"));
+    const textFile =
+      files.find((f) => f.name.endsWith("_djvu.txt")) ||
+      files.find((f) => f.name.endsWith(".txt")) ||
+      files.find((f) => f.name.endsWith("_epub.epub"));
 
     if (!textFile) {
       throw new Error("Full text file not found");

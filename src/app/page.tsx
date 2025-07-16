@@ -1,8 +1,8 @@
 "use client";
 
-import Searchbar from "@/ui/Searchbar";
 import PageTitleAndDescription from "@/ui/PageTitleAndDescription";
-import BookText from "@/ui/BookText";
+import SearchResults from "@/ui/SearchResults";
+import BookReader from "@/ui/BookReader";
 import { ArchiveItem } from "@/lib/types";
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -32,7 +32,7 @@ export default function Home() {
     <div className='container mx-auto p-4'>
       <PageTitleAndDescription />
       <Suspense fallback={<div className='text-center mt-8'>Loading...</div>}>
-        <BookText searchResults={searchResults} />
+        <SearchResults searchResults={searchResults} />
       </Suspense>
     </div>
   );
