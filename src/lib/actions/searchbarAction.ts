@@ -2,7 +2,6 @@
 
 import { searchArchiveOrgSchema } from "../schemas";
 import { searchArchiveOrg } from "@/lib/utils/searchArchiveOrg";
-import { revalidatePath } from "next/cache";
 
 export async function searchArchiveOrgAction(formData: FormData) {
   const parsedData = searchArchiveOrgSchema.safeParse({
@@ -16,11 +15,9 @@ export async function searchArchiveOrgAction(formData: FormData) {
   try {
     if (parsedData.data.query) {
       const results = await searchArchiveOrg({ query: parsedData.data.query });
-      revalidatePath("/");
 
       return results;
     } else {
-      revalidatePath("/");
       return [];
     }
   } catch (error) {

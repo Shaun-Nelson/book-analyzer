@@ -1,4 +1,4 @@
-import Searchbar from "@/ui/Searchbar";
+import Searchbar from "@/ui/search/Searchbar";
 import { ReaderProvider } from "@/lib/context/ReaderContext";
 import type { Metadata } from "next";
 import { ibmPlexSans, literata } from "@/ui/fonts";
