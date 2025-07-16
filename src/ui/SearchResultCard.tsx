@@ -1,28 +1,29 @@
+"use client";
+
 import { ArchiveItem } from "@/lib/types";
 import { fetchFullText } from "@/lib/actions/fetchFullTextAction";
+import { useReader } from "@/lib/context/ReaderContext";
 
 type Props = {
   item: ArchiveItem;
   error: boolean;
-  setText: (text: string | null) => void;
-  setBookChoice: (bookChoice: ArchiveItem) => void;
   setErrorForItem: (identifier: string, error: boolean) => void;
 };
 
-export default function SearchResultCard({
+export default function SearchfullTextCard({
   item,
   error,
-  setText,
-  setBookChoice,
   setErrorForItem,
 }: Props) {
+  const { setText, setBook } = useReader();
+
   const handleFetchFullText = async () => {
     try {
-      const result = await fetchFullText(item.identifier);
-      if (result !== null) {
+      const fullText = await fetchFullText(item.identifier);
+      if (fullText) {
         setErrorForItem(item.identifier, false);
-        setText(result);
-        setBookChoice(item);
+        setText(fullText);
+        setBook(item);
       } else {
         setErrorForItem(item.identifier, true);
       }
@@ -42,7 +43,7 @@ export default function SearchResultCard({
             {item.date?.split("-")[0] || "undated"}
           </p>
           <button
-            className='py-2 px-4 mt-4 text-lg text-neutral-50 rounded-xl bg-neutral-600'
+            className='py-2 px-4 mt-4 text-neutral-50 rounded-xl bg-neutral-600'
             onClick={handleFetchFullText}
           >
             Read and Analyze

@@ -1,4 +1,5 @@
 import Searchbar from "@/ui/Searchbar";
+import { ReaderProvider } from "@/lib/context/ReaderContext";
 import type { Metadata } from "next";
 import { ibmPlexSans, literata } from "@/ui/fonts";
 import "./globals.css";
@@ -21,7 +22,7 @@ export default function RootLayout({
       >
         <main className='min-h-screen bg-neutral-200 font-[literata] container mx-auto p-4'>
           <Searchbar />
-          {children}
+          <ReaderProvider>{children}</ReaderProvider>
         </main>
       </body>
     </html>
